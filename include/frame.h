@@ -42,57 +42,73 @@ protected:
 
 class PinholeCamera : public AbstractCamera {
 public:
-	PinholeCamera(double width, double height,
+    PinholeCamera(double width, double height,
 				  double fx, double fy, double cx, double cy,
 				  double k1 = 0.0, double k2 = 0.0, double p1 = 0.0, double p2 = 0.0, double k3 = 0.0);
-	~PinholeCamera();
+    ~PinholeCamera();
 
-	virtual bool GetCamParaOrDie(string filename);
-	virtual Vector3d Cam2World(const double &uw, const double &uh) const;
-	virtual Vector3d Cam2World(const Vector2d &pixel) const;
-	virtual Vector3d Cam2World(const Point2d &pixel) const;
+    virtual bool GetCamParaOrDie(string filename);
+    virtual Vector3d Cam2World(const double &uw, const double &uh) const;
+    virtual Vector3d Cam2World(const Vector2d &pixel) const;
+    virtual Vector3d Cam2World(const Point2d &pixel) const;
+    virtual Vector2d World2Cam(const double &x, const double &y, const double &z) const;
+    virtual Vector2d World2Cam(const Vector3d &xyz) const;
 
-
-	virtual Vector2d World2Cam(const double &x, const double &y, const double &z) const;
-	virtual Vector2d World2Cam(const Vector3d &xyz) const;
-
-	inline double fx() const { return fx_; };
-	inline double fy() const { return fy_; };
-	inline double cx() const { return cx_; };
-	inline double cy() const { return cy_; };
+    inline double fx() const { return fx_; };
+    inline double fy() const { return fy_; };
+    inline double cx() const { return cx_; };
+    inline double cy() const { return cy_; };
 
 private:
-	double fx_, fy_, cx_, cy_, d_[5];
-	bool is_distorted;
-	Mat K_cv_, D_cv_;
-	Mat map_[2];
+    double fx_, fy_, cx_, cy_, d_[5];
+    bool is_distorted;
+    Mat K_cv_, D_cv_;
+    Mat map_[2];
 };
 
 class FisheyeCamera : public AbstractCamera {
 public:
-	virtual bool GetCamParaOrDie(string filename);
-	virtual Vector3d Cam2World(const double &uw, const double &uh) const;
-	virtual Vector3d Cam2World(const Vector2d &pixel) const;
-	virtual Vector3d Cam2World(const Point2d &pixel) const;
+    FisheyeCamera();
+    ~FisheyeCamera();
 
+    virtual bool GetCamParaOrDie(string filename);
+    virtual Vector3d Cam2World(const double &uw, const double &uh) const;
+    virtual Vector3d Cam2World(const Vector2d &pixel) const;
+    virtual Vector3d Cam2World(const Point2d &pixel) const;
 
-	virtual Vector2d World2Cam(const double &x, const double &y, const double &z) const;
-	virtual Vector2d World2Cam(const Vector3d &xyz) const;
-public:
+    virtual Vector2d World2Cam(const double &x, const double &y, const double &z) const;
+    virtual Vector2d World2Cam(const Vector3d &xyz) const;
 
-	double kc_[4];
-	double cx_, cy_;
+private:
+    double kc_[4];
+    double cx_, cy_;
 };
-
-
 
 class AbstractFrame {
-
+    //typedef std::shared_ptr<AbstractFrame>  FramePtr;
+public:
+    AbstractFrame(AbstractCamera* cam_ptr, const Mat& img, double timestamp);
+    ~AbstractFrame();
+    void InitFrame(const Mat& img);
+public:
+    static int      frame_counter_;
+    int             id_;
+    double          timestamp_;
+    AbstractCamera* cam_ptr_;
 
 };
 
+class  Noncopyable
+{
+protected:
+    Noncopyable() {}
+    ~Noncopyable() {}
+private:
+    Noncopyable(const Noncopyable &);
+    Noncopyable& operator =(const Noncopyable &);
+};
 
-}
 
+} //end of namespace vslam
 
 #endif

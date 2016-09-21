@@ -6,6 +6,9 @@ set(CMAKE_CXX_FLAGS_DEBUG "$ENV{CXXFLAGS} -O0 -Wall -g -ggdb")
 set(CMAKE_CXX_FLAGS_REALSE "$ENV{CXXFLAGS} -std=c++11 -O3 -Wall -pthread")
 
 aux_source_directory(./src DIR_SRCS)
+message(${DIR_SRCS})
+message(${PROJECT_SOURCE_DIR})
+#set(LIBRARY_OUTPUT_PATH )
 
 find_package(Ceres REQUIRED)
 find_package(OpenCV REQUIRED)
@@ -17,7 +20,7 @@ include_directories(
 	${OpenCV_INCLUDE_DIRS}
 )
 
-message(${DIR_SRCS}) 
+
 
 add_executable(vslam_bin ${DIR_SRCS})
 target_link_libraries(vslam_bin ${CERES_LIBRARIES} ${OpenCV_LIBRARIES})

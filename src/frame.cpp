@@ -2,6 +2,11 @@
 
 namespace vslam{
 
+bool PinholeCamera::GetCamParaOrDie(std::string filename)
+{
+
+}
+
 Vector3d PinholeCamera::Cam2World(const double& uw, const double& uh) const {
 
 
