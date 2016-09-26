@@ -33,8 +33,7 @@ struct EpipolarError {
 		return true;
 	}
 
-	static ceres::CostFunction* Create(const Vector3d observerd_p1, 
-										const Vector3d observerd_p2) {
+	static ceres::CostFunction* Create(const Vector3d observerd_p1, const Vector3d observerd_p2) {
 		return (new ceres::NumericDiffCostFunction<EpipolarError, ceres::CENTRAL, 1, 3, 3>(
 					new EpipolarError( observerd_p1,  observerd_p2)));
 	}

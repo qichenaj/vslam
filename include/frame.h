@@ -6,14 +6,25 @@
 #include <opencv2/opencv.hpp>
 #include <Eigen/Eigen>
 
-
 using std::string;
 using Eigen::Vector3d;
 using Eigen::Vector2d;
 using cv::Point2d;
 using cv::Point3d;
 using cv::Mat;
+
 namespace vslam{
+
+class  Noncopyable
+{
+protected:
+    Noncopyable() {}
+    ~Noncopyable() {}
+private:
+    Noncopyable(const Noncopyable &);
+    Noncopyable& operator =(const Noncopyable &);
+}; //end of class Noncopyable
+
 
 class AbstractCamera {
 public:
@@ -66,12 +77,12 @@ private:
     Mat map_[2];
 };
 
-class FisheyeCamera : public AbstractCamera {
+class CenterFisheyeCamera : public AbstractCamera {
 public:
-    FisheyeCamera();
-    ~FisheyeCamera();
+    CenterFisheyeCamera();
+    ~CenterFisheyeCamera();
 
-    virtual bool GetCamParaOrDie(string filename);
+    virtual bool     GetCamParaOrDie(string filename);
     virtual Vector3d Cam2World(const double &uw, const double &uh) const;
     virtual Vector3d Cam2World(const Vector2d &pixel) const;
     virtual Vector3d Cam2World(const Point2d &pixel) const;
@@ -82,6 +93,13 @@ public:
 private:
     double kc_[4];
     double cx_, cy_;
+};
+
+class StereoPinholeCamera : public AbstractCamera {
+public:
+    StereoPinholeCamera();
+    ~StereoPinholeCamera();
+
 };
 
 class AbstractFrame {
@@ -95,19 +113,23 @@ public:
     int             id_;
     double          timestamp_;
     AbstractCamera* cam_ptr_;
-
 };
 
-class  Noncopyable
-{
-protected:
-    Noncopyable() {}
-    ~Noncopyable() {}
+class FeatureFrame : public AbstractFrame {
+public:
+    FeatureFrame(AbstractCamera* cam_ptr, const Mat& img, double timestamp);
 private:
-    Noncopyable(const Noncopyable &);
-    Noncopyable& operator =(const Noncopyable &);
+
+
 };
 
+class DirectFrame : public AbstractFrame {
+public:
+    DirectFrame(AbstractCamera* cam_ptr, const Mat& img, double timestamp);
+private:
+
+
+};
 
 } //end of namespace vslam
 
