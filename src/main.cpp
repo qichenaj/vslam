@@ -6,18 +6,14 @@
 
 using std::cout;
 using std::endl;
-using std::vector;
 
-using vslam::GenericFisheyeCamera;
 using vslam::AbstractFrame;
-using vslam::AbstractCamera;
 
 
 template <class CameraType>
 int AbstractFrame<CameraType>::frame_counter_ = 0;
 
-extern int QtDisplayThread();
-
+//extern int QtDisplayThread();
 
 
 int MainThread() {
